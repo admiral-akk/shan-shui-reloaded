@@ -2,14 +2,14 @@ import { UniformRNG } from "./UniformRNG";
 
 //https://raw.githubusercontent.com/processing/p5.js/master/src/math/noise.js
 export class PerlinNoise {
-    PERLIN_YWRAPB = 4;
-    PERLIN_YWRAP = 1 << this.PERLIN_YWRAPB;
-    PERLIN_ZWRAPB = 8;
-    PERLIN_ZWRAP = 1 << this.PERLIN_ZWRAPB;
+    private PERLIN_YWRAPB = 4;
+    private PERLIN_YWRAP = 1 << this.PERLIN_YWRAPB;
+    private PERLIN_ZWRAPB = 8;
+    private PERLIN_ZWRAP = 1 << this.PERLIN_ZWRAPB;
     // 4095
-    PERLIN_SIZE = (1 << 12) - 1;
-    perlin_octaves = 4;
-    perlin_amp_falloff = 0.5;
+    private PERLIN_SIZE = (1 << 12) - 1;
+    private perlin_octaves = 4;
+    private perlin_amp_falloff = 0.5;
 
     constructor(private rng: UniformRNG) { }
 
@@ -17,11 +17,11 @@ export class PerlinNoise {
     // - frequency: 1/2
     // - phase offset: pi
     // - rescaled to [0,1]
-    scaled_cosine(i: number): number {
+    private scaled_cosine(i: number): number {
         return 0.5 * (1 - Math.cos(i * Math.PI));
     }
 
-    perlin = InitializePerlinArray(this.PERLIN_SIZE, () => this.rng.random());
+    private perlin = InitializePerlinArray(this.PERLIN_SIZE, () => this.rng.random());
 
     // Returns a random valued between [0,1]
     noise(x: number, y: number = 0, z: number = 0): number {
@@ -110,11 +110,11 @@ function InitializePerlinArray(size: number, rng: () => number): Array<number> {
 
 // https://en.wikipedia.org/wiki/Linear_congruential_generator
 class LinearCongruentialGenerator {
-    m = 4294967296;
-    a = 1664525;
-    c = 1013904223;
-    seed: number;
-    z: number;
+    private m = 4294967296;
+    private a = 1664525;
+    private c = 1013904223;
+    private seed: number;
+    private z: number;
     constructor(rng: UniformRNG, seedVal?: number) {
         const seed = (seedVal ? seedVal : rng.next() * this.m) >>> 0;
         this.seed = seed;
