@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6", 
+    "lib" : ["DOM", "es6"],
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "outDir": "build"
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts" ]
+}
