@@ -1,13 +1,15 @@
 import { parseQueryParams } from "./ParseArgs";
 import { } from "./GlobalVariables"
-import { PseudoRandomNumberGenerator } from "./PseudoRandomNumberGenerator";
+import { UniformRNG } from "./UniformRNG";
 import { PerlinNoise } from "./PerlinNoise";
 
-const rng = new PseudoRandomNumberGenerator();
-Math.random = () => rng.random();
+const rng = new UniformRNG();
 
 const seed = parseQueryParams();
-window.SEED = seed;
 rng.seed(seed);
 
-window.Noise = new PerlinNoise();
+window.Noise = new PerlinNoise(rng);
+
+// We add global variables at the end to ensure that we don't inadvertidly depend on them in our Typescript.
+Math.random = () => rng.random();
+window.SEED = seed;

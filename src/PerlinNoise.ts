@@ -1,3 +1,5 @@
+import { UniformRNG } from "./UniformRNG";
+
 //https://raw.githubusercontent.com/processing/p5.js/master/src/math/noise.js
 export class PerlinNoise {
     PERLIN_YWRAPB = 4;
@@ -9,6 +11,8 @@ export class PerlinNoise {
     perlin_octaves = 4;
     perlin_amp_falloff = 0.5;
 
+    constructor(private rng: UniformRNG) { }
+
     // Returns a cosine with:
     // - frequency: 1/2
     // - phase offset: pi
@@ -17,7 +21,7 @@ export class PerlinNoise {
         return 0.5 * (1 - Math.cos(i * Math.PI));
     }
 
-    perlin = InitializePerlinArray(this.PERLIN_SIZE, () => Math.random());
+    perlin = InitializePerlinArray(this.PERLIN_SIZE, () => this.rng.random());
 
     // Returns a random valued between [0,1]
     noise(x: number, y: number = 0, z: number = 0): number {
@@ -90,7 +94,7 @@ export class PerlinNoise {
     }
 
     noiseSeed(seed: number) {
-        const lcg = new LinearCongruentialGenerator(seed);
+        const lcg = new LinearCongruentialGenerator(this.rng, seed);
         this.perlin = InitializePerlinArray(this.PERLIN_SIZE, () => lcg.rand());
     }
 
@@ -111,9 +115,8 @@ class LinearCongruentialGenerator {
     c = 1013904223;
     seed: number;
     z: number;
-    constructor(seedVal?: number) {
-
-        const seed = (seedVal ? seedVal : Math.random() * this.m) >>> 0;
+    constructor(rng: UniformRNG, seedVal?: number) {
+        const seed = (seedVal ? seedVal : rng.next() * this.m) >>> 0;
         this.seed = seed;
         this.z = seed;
     }

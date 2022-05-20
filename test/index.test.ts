@@ -1,9 +1,9 @@
-import { PseudoRandomNumberGenerator } from '../src/PseudoRandomNumberGenerator';
+import { UniformRNG } from '../src/PseudoRandomNumberGenerator';
 
 
 describe('testing rng distribution', () => {
     test('random numbers should be roughly evenly distributed.', () => {
-        const rng = new PseudoRandomNumberGenerator();
+        const rng = new UniformRNG();
         const bucketCount = 10;
         const sampleCount = 10000000;
         const samples = rng.test(sampleCount, bucketCount);

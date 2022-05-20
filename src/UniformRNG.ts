@@ -1,4 +1,4 @@
-export class PseudoRandomNumberGenerator {
+export class UniformRNG {
     private s = 1234;
     private p = 999979;
     private q = 999983;
