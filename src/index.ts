@@ -1,5 +1,5 @@
-
-
+import { parseQueryParams } from "./ParseArgs";
+import { } from "./GlobalVariables"
 console.log('Hello words');
 
 export class PseudoRandomNumberGenerator {
@@ -61,5 +61,8 @@ export class PseudoRandomNumberGenerator {
     }
 }
 
-(window as any).rng = new PseudoRandomNumberGenerator();
-Math.random = () => (window as any).rng.random();
+const rng = new PseudoRandomNumberGenerator();
+const seed = parseQueryParams();
+window.SEED = seed;
+rng.seed(seed);
+Math.random = () => rng.random();
