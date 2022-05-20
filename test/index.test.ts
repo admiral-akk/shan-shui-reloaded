@@ -1,4 +1,4 @@
-import { PseudoRandomNumberGenerator } from '../src/index';
+import { PseudoRandomNumberGenerator } from '../src/PseudoRandomNumberGenerator';
 
 
 describe('testing rng distribution', () => {
