@@ -13,7 +13,7 @@
     "pretest": "npm run compile",
     "posttest": "npm run lint",
     "launch": "node dist/",
-    "start": "npm run compile"
+    "start": "npm run compile && http-server"
   },
   "repository": {
     "type": "git",
