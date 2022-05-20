@@ -1,93 +1,9 @@
-<script id="PRNG">
-  var Prng = new function() {
-    this.s = 1234;
-    this.p = 999979; //9887//983
-    this.q = 999983; //9967//991
-    this.m = this.p * this.q;
-    this.hash = function(x) {
-      var y = window.btoa(JSON.stringify(x));
-      var z = 0;
-      for (var i = 0; i < y.length; i++) {
-        z += y.charCodeAt(i) * Math.pow(128, i);
-      }
-      return z;
-    };
-    this.seed = function(x) {
-      if (x == undefined) {
-        x = new Date().getTime();
-      }
-      var y = 0;
-      var z = 0;
-      function redo() {
-        y = (Prng.hash(x) + z) % Prng.m;
-        z += 1;
-      }
-      while (y % Prng.p == 0 || y % Prng.q == 0 || y == 0 || y == 1) {
-        redo();
-      }
-      Prng.s = y;
-      console.log(["int seed", Prng.s]);
-      for (var i = 0; i < 10; i++) {
-        Prng.next();
-      }
-    };
-    this.next = function() {
-      Prng.s = (Prng.s * Prng.s) % Prng.m;
-      return Prng.s / Prng.m;
-    };
-    this.test = function(f) {
-      var F =
-        f ||
-        function() {
-          return Prng.next();
-        };
-      var t0 = new Date().getTime();
-      var chart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      for (var i = 0; i < 10000000; i++) {
-        chart[Math.floor(F() * 10)] += 1;
-      }
-      console.log(chart);
-      console.log("finished in " + (new Date().getTime() - t0));
-      return chart;
-    };
-  }();
-  Math.random = function() {
-    return Prng.next();
-  };
-  Math.seed = function(x) {
-    return Prng.seed(x);
-  };
-</script>
-
-<script>
-  function parseArgs(key2f) {
-    var par = window.location.href.split("?")[1];
-    if (par == undefined) {
-      return;
-    }
-    par = par.split("&");
-    for (var i = 0; i < par.length; i++) {
-      var e = par[i].split("=");
-      try {
-        key2f[e[0]](e[1]);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-  SEED = "" + new Date().getTime();
-  parseArgs({
-    seed: function(x) {
-      SEED = x == "" ? SEED : x;
-    },
-  });
-  Math.seed(SEED);
-  console.log(Prng.seed);
-</script>
-
+<script>var exports = {};</script>
+<script src="./build/index.js"></script>
+<script src="./build/ParseArgs.js"></script>
 <script id="PerlinNoise">
   //https://raw.githubusercontent.com/processing/p5.js/master/src/math/noise.js
-  var Noise = new function() {
+  var Noise = new function () {
     var PERLIN_YWRAPB = 4;
     var PERLIN_YWRAP = 1 << PERLIN_YWRAPB;
     var PERLIN_ZWRAPB = 8;
@@ -95,11 +11,11 @@
     var PERLIN_SIZE = 4095;
     var perlin_octaves = 4;
     var perlin_amp_falloff = 0.5;
-    var scaled_cosine = function(i) {
+    var scaled_cosine = function (i) {
       return 0.5 * (1.0 - Math.cos(i * Math.PI));
     };
     var perlin;
-    this.noise = function(x, y, z) {
+    this.noise = function (x, y, z) {
       y = y || 0;
       z = z || 0;
       if (perlin == null) {
@@ -166,7 +82,7 @@
       }
       return r;
     };
-    this.noiseDetail = function(lod, falloff) {
+    this.noiseDetail = function (lod, falloff) {
       if (lod > 0) {
         perlin_octaves = lod;
       }
@@ -174,21 +90,21 @@
         perlin_amp_falloff = falloff;
       }
     };
-    this.noiseSeed = function(seed) {
-      var lcg = (function() {
+    this.noiseSeed = function (seed) {
+      var lcg = (function () {
         var m = 4294967296,
           a = 1664525,
           c = 1013904223,
           seed,
           z;
         return {
-          setSeed: function(val) {
+          setSeed: function (val) {
             z = seed = (val == null ? Math.random() * m : val) >>> 0;
           },
-          getSeed: function() {
+          getSeed: function () {
             return seed;
           },
-          rand: function() {
+          rand: function () {
             z = (a * z + c) % m;
             return z / m;
           },
@@ -204,12 +120,12 @@
 </script>
 
 <script id="PolyTools">
-  var PolyTools = new function() {
-    this.midPt = function() {
+  var PolyTools = new function () {
+    this.midPt = function () {
       var plist =
         arguments.length == 1 ? arguments[0] : Array.apply(null, arguments);
       return plist.reduce(
-        function(acc, v) {
+        function (acc, v) {
           /*       if (v == undefined || acc == undefined){
         console.log("ERRR");
         console.log(plist)
@@ -220,7 +136,7 @@
         [0, 0],
       );
     };
-    this.triangulate = function(plist, args) {
+    this.triangulate = function (plist, args) {
       //return []
       var args = args != undefined ? args : {};
       var area = args.area != undefined ? args.area : 100;
@@ -314,7 +230,7 @@
       }
       function sliverRatio(plist) {
         var A = areaOf(plist);
-        var P = sidesOf(plist).reduce(function(m, n) {
+        var P = sidesOf(plist).reduce(function (m, n) {
           return m + n;
         }, 0);
         return A / P;
@@ -434,10 +350,10 @@
 
   function randGaussian() {
     return (
-      wtrand(function(x) {
+      wtrand(function (x) {
         return Math.pow(Math.E, -24 * Math.pow(x - 0.5, 2));
       }) *
-        2 -
+      2 -
       1
     );
   }
@@ -471,11 +387,11 @@
           (Math.pow(1 - t, 2) * p0[0] +
             2 * t * (1 - t) * p1[0] * w +
             t * t * p2[0]) /
-            u,
+          u,
           (Math.pow(1 - t, 2) * p0[1] +
             2 * t * (1 - t) * p1[1] * w +
             t * t * p2[1]) /
-            u,
+          u,
         ]);
       }
     }
@@ -524,9 +440,9 @@
     var fun =
       args.fun != undefined
         ? args.fun
-        : function(x) {
-            return Math.sin(x * Math.PI);
-          };
+        : function (x) {
+          return Math.sin(x * Math.PI);
+        };
 
     if (ptlist.length == 0) {
       return "";
@@ -567,7 +483,7 @@
       .concat([ptlist[0]]);
 
     var canv = poly(
-      vtxlist.map(function(x) {
+      vtxlist.map(function (x) {
         return [x[0] + xof, x[1] + yof];
       }),
       { fil: col, str: col, wid: out },
@@ -586,11 +502,11 @@
     var fun =
       args.fun != undefined
         ? args.fun
-        : function(x) {
-            return x <= 1
-              ? Math.pow(Math.sin(x * Math.PI), 0.5)
-              : -Math.pow(Math.sin((x + 1) * Math.PI), 0.5);
-          };
+        : function (x) {
+          return x <= 1
+            ? Math.pow(Math.sin(x * Math.PI), 0.5)
+            : -Math.pow(Math.sin((x + 1) * Math.PI), 0.5);
+        };
 
     var reso = 20.0;
     var lalist = [];
@@ -650,7 +566,7 @@
     return rlist;
   }
 
-  var texture = function(ptlist, args) {
+  var texture = function (ptlist, args) {
     var args = args != undefined ? args : {};
     var xof = args.xof != undefined ? args.xof : 0;
     var yof = args.yof != undefined ? args.yof : 0;
@@ -662,25 +578,25 @@
     var noi =
       args.noi != undefined
         ? args.noi
-        : function(x) {
-            return 30 / x;
-          };
+        : function (x) {
+          return 30 / x;
+        };
     var col =
       args.col != undefined
         ? args.col
-        : function(x) {
-            return "rgba(100,100,100," + (Math.random() * 0.3).toFixed(3) + ")";
-          };
+        : function (x) {
+          return "rgba(100,100,100," + (Math.random() * 0.3).toFixed(3) + ")";
+        };
     var dis =
       args.dis != undefined
         ? args.dis
-        : function() {
-            if (Math.random() > 0.5) {
-              return (1 / 3) * Math.random();
-            } else {
-              return (1 * 2) / 3 + (1 / 3) * Math.random();
-            }
-          };
+        : function () {
+          if (Math.random() > 0.5) {
+            return (1 / 3) * Math.random();
+          } else {
+            return (1 * 2) / 3 + (1 / 3) * Math.random();
+          }
+        };
     var reso = [ptlist.length, ptlist[0].length];
     var texlist = [];
     for (var i = 0; i < tex; i++) {
@@ -721,7 +637,7 @@
     if (sha) {
       for (var j = 0; j < texlist.length; j += 1 + (sha != 0)) {
         canv += stroke(
-          texlist[j].map(function(x) {
+          texlist[j].map(function (x) {
             return [x[0] + xof, x[1] + yof];
           }),
           { col: "rgba(100,100,100,0.1)", wid: sha },
@@ -731,7 +647,7 @@
     //TEXTURE
     for (var j = 0 + sha; j < texlist.length; j += 1 + sha) {
       canv += stroke(
-        texlist[j].map(function(x) {
+        texlist[j].map(function (x) {
           return [x[0] + xof, x[1] + yof];
         }),
         { col: col(j / texlist.length), wid: wid },
@@ -740,8 +656,8 @@
     return ret ? texlist : canv;
   };
 
-  var Tree = new function() {
-    this.tree01 = function(x, y, args) {
+  var Tree = new function () {
+    this.tree01 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 50;
       var wid = args.wid != undefined ? args.wid : 3;
@@ -800,7 +716,7 @@
         poly(line2, { fil: "none", str: col, wid: 1.5 });
       return canv;
     };
-    this.tree02 = function(x, y, args) {
+    this.tree02 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 16;
       var wid = args.wid != undefined ? args.wid : 8;
@@ -826,7 +742,7 @@
           {
             ang: Math.PI / 2,
             col: "rgba(100,100,100,0.8)",
-            fun: function(x) {
+            fun: function (x) {
               return x <= 1
                 ? Math.pow(Math.sin(x * Math.PI) * x, 0.5)
                 : -Math.pow(Math.sin((x - 2) * Math.PI * (x - 2)), 0.5);
@@ -839,16 +755,16 @@
       }
       return canv;
     };
-    this.tree03 = function(x, y, args) {
+    this.tree03 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 50;
       var wid = args.wid != undefined ? args.wid : 5;
       var ben =
         args.ben != undefined
           ? args.ben
-          : function(x) {
-              return 0;
-            };
+          : function (x) {
+            return 0;
+          };
       var col = args.col != undefined ? args.col : "rgba(100,100,100,0.5)";
       var noi = args.noi != undefined ? args.noi : 0.5;
 
@@ -876,7 +792,7 @@
         var ny = y - (i * hei) / reso;
         if (i >= reso / 5) {
           for (var j = 0; j < (reso - i) * 2; j++) {
-            var shape = function(x) {
+            var shape = function (x) {
               return Math.log(50 * x + 1) / 3.95;
             };
             var ox = Math.random() * wid * 2 * shape((reso - i) / reso);
@@ -916,7 +832,7 @@
       return canv;
     };
 
-    var branch = function(args) {
+    var branch = function (args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 300;
       var wid = args.wid != undefined ? args.wid : 6;
@@ -988,7 +904,7 @@
       return [trlist1, trlist2];
     };
 
-    var twig = function(tx, ty, dep, args) {
+    var twig = function (tx, ty, dep, args) {
       var args = args != undefined ? args : {};
       var dir = args.dir != undefined ? args.dir : 1;
       var sca = args.sca != undefined ? args.sca : 1;
@@ -1000,10 +916,10 @@
       var twlist = [];
       var tl = 10;
       var hs = Math.random() * 0.5 + 0.5;
-      var fun1 = function(x) {
+      var fun1 = function (x) {
         return Math.pow(x, 0.5);
       };
-      var fun2 = function(x) {
+      var fun2 = function (x) {
         return -1 / Math.pow(i / tl + 1, 5) + 1;
       };
 
@@ -1041,7 +957,7 @@
                 ang:
                   ang / 2 + Math.PI / 2 + Math.PI * 0.2 * (Math.random() - 0.5),
                 col: "rgba(100,100,100," + (0.5 + dep * 0.2).toFixed(3) + ")",
-                fun: function(x) {
+                fun: function (x) {
                   return x <= 1
                     ? Math.pow(Math.sin(x * Math.PI) * x, 0.5)
                     : -Math.pow(Math.sin((x - 2) * Math.PI * (x - 2)), 0.5);
@@ -1053,7 +969,7 @@
       }
       canv += stroke(twlist, {
         wid: 1,
-        fun: function(x) {
+        fun: function (x) {
           return Math.cos((x * Math.PI) / 2);
         },
         col: "rgba(100,100,100,0.5)",
@@ -1061,11 +977,11 @@
       return canv;
     };
 
-    var barkify = function(x, y, trlist) {
+    var barkify = function (x, y, trlist) {
       function bark(x, y, wid, ang) {
         var len = 10 + 10 * Math.random();
         var noi = 0.5;
-        var fun = function(x) {
+        var fun = function (x) {
           return x <= 1
             ? Math.pow(Math.sin(x * Math.PI), 0.5)
             : -Math.pow(Math.sin((x + 1) * Math.PI), 0.5);
@@ -1102,7 +1018,7 @@
           noi: 0,
           col: "rgba(100,100,100,0.4)",
           out: 0,
-          fun: function(x) {
+          fun: function (x) {
             return Math.sin((x + fr) * Math.PI * 3);
           },
         });
@@ -1179,7 +1095,7 @@
             (Noise.noise(i, j * 0.1, 2) - 0.5) * (15 + 5 * randGaussian());
         }
         canv += stroke(
-          rglist[i].map(function(v) {
+          rglist[i].map(function (v) {
             return [v[0] + x, v[1] + y];
           }),
           { wid: 1.5, col: "rgba(100,100,100,0.7)", out: 0 },
@@ -1188,7 +1104,7 @@
       return canv;
     };
 
-    this.tree04 = function(x, y, args) {
+    this.tree04 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 300;
       var wid = args.wid != undefined ? args.wid : 6;
@@ -1221,7 +1137,7 @@
 
           brlist[0].splice(0, 1);
           brlist[1].splice(0, 1);
-          var foff = function(v) {
+          var foff = function (v) {
             return [v[0] + trlist[i][0], v[1] + trlist[i][1]];
           };
           txcanv += barkify(x, y, [brlist[0].map(foff), brlist[1].map(foff)]);
@@ -1243,7 +1159,7 @@
           }
           brlist = brlist[0].concat(brlist[1].reverse());
           trmlist = trmlist.concat(
-            brlist.map(function(v) {
+            brlist.map(function (v) {
               return [v[0] + trlist[i][0], v[1] + trlist[i][1]];
             }),
           );
@@ -1256,14 +1172,14 @@
       trmlist.splice(0, 1);
       trmlist.splice(trmlist.length - 1, 1);
       canv += stroke(
-        trmlist.map(function(v) {
+        trmlist.map(function (v) {
           return [v[0] + x, v[1] + y];
         }),
         {
           col:
             "rgba(100,100,100," + (0.4 + Math.random() * 0.1).toFixed(3) + ")",
           wid: 2.5,
-          fun: function(x) {
+          fun: function (x) {
             return Math.sin(1);
           },
           noi: 0.9,
@@ -1276,7 +1192,7 @@
       return canv;
     };
 
-    this.tree05 = function(x, y, args) {
+    this.tree05 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 300;
       var wid = args.wid != undefined ? args.wid : 5;
@@ -1314,7 +1230,7 @@
 
           brlist[0].splice(0, 1);
           brlist[1].splice(0, 1);
-          var foff = function(v) {
+          var foff = function (v) {
             return [v[0] + trlist[i][0], v[1] + trlist[i][1]];
           };
           //txcanv += barkify(x,y,[brlist[0].map(foff),brlist[1].map(foff)])
@@ -1337,7 +1253,7 @@
           }
           brlist = brlist[0].concat(brlist[1].reverse());
           trmlist = trmlist.concat(
-            brlist.map(function(v) {
+            brlist.map(function (v) {
               return [v[0] + trlist[i][0], v[1] + trlist[i][1]];
             }),
           );
@@ -1351,14 +1267,14 @@
       trmlist.splice(0, 1);
       trmlist.splice(trmlist.length - 1, 1);
       canv += stroke(
-        trmlist.map(function(v) {
+        trmlist.map(function (v) {
           return [v[0] + x, v[1] + y];
         }),
         {
           col:
             "rgba(100,100,100," + (0.4 + Math.random() * 0.1).toFixed(3) + ")",
           wid: 2.5,
-          fun: function(x) {
+          fun: function (x) {
             return Math.sin(1);
           },
           noi: 0.9,
@@ -1371,7 +1287,7 @@
       return canv;
     };
 
-    this.tree06 = function(x, y, args) {
+    this.tree06 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 100;
       var wid = args.wid != undefined ? args.wid : 6;
@@ -1444,7 +1360,7 @@
             }
 
             trmlist = trmlist.concat(
-              brlist.map(function(v) {
+              brlist.map(function (v) {
                 return [v[0] + trlist[i][0], v[1] + trlist[i][1]];
               }),
             );
@@ -1467,14 +1383,14 @@
       trmlist.splice(0, 1);
       trmlist.splice(trmlist.length - 1, 1);
       canv += stroke(
-        trmlist.map(function(v) {
+        trmlist.map(function (v) {
           return [v[0] + x, v[1] + y];
         }),
         {
           col:
             "rgba(100,100,100," + (0.4 + Math.random() * 0.1).toFixed(3) + ")",
           wid: 2.5,
-          fun: function(x) {
+          fun: function (x) {
             return Math.sin(1);
           },
           noi: 0.9,
@@ -1487,16 +1403,16 @@
       return canv;
     };
 
-    this.tree07 = function(x, y, args) {
+    this.tree07 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 60;
       var wid = args.wid != undefined ? args.wid : 4;
       var ben =
         args.ben != undefined
           ? args.ben
-          : function(x) {
-              return Math.sqrt(x) * 0.2;
-            };
+          : function (x) {
+            return Math.sqrt(x) * 0.2;
+          };
       var col = args.col != undefined ? args.col : "rgba(100,100,100,1)";
       var noi = args.noi != undefined ? args.noi : 0.5;
 
@@ -1540,7 +1456,7 @@
                   "," +
                   parseFloat(leafcol[3]).toFixed(3) +
                   ")",
-                fun: function(x) {
+                fun: function (x) {
                   return x <= 1
                     ? 2.75 * x * Math.pow(1 - x, 1 / 1.8)
                     : 2.75 * (x - 2) * Math.pow(x - 1, 1 / 1.8);
@@ -1579,7 +1495,7 @@
       return canv;
     };
 
-    this.tree08 = function(x, y, args) {
+    this.tree08 = function (x, y, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 80;
       var wid = args.wid != undefined ? args.wid : 1;
@@ -1611,22 +1527,22 @@
 
         var fun =
           dep == 0
-            ? function(x) {
-                return Math.cos(0.5 * Math.PI * x);
-              }
-            : function(x) {
-                return 1;
-              };
+            ? function (x) {
+              return Math.cos(0.5 * Math.PI * x);
+            }
+            : function (x) {
+              return 1;
+            };
         var spt = [xoff, yoff];
         var ept = [xoff + Math.cos(ang) * len, yoff + Math.sin(ang) * len];
 
         var trmlist = [[xoff, yoff], [xoff + len, yoff]];
 
         var bfun = randChoice([
-          function(x) {
+          function (x) {
             return Math.sin(x * Math.PI);
           },
-          function(x) {
+          function (x) {
             return -Math.sin(x * Math.PI);
           },
         ]);
@@ -1657,8 +1573,8 @@
                 ang +
                 ben +
                 Math.PI *
-                  randChoice([normRand(-1, 0.5), normRand(0.5, 1)]) *
-                  0.2,
+                randChoice([normRand(-1, 0.5), normRand(0.5, 1)]) *
+                0.2,
               len: len * normRand(0.8, 0.9),
               ben: nben,
             });
@@ -1667,8 +1583,8 @@
                 ang +
                 ben +
                 Math.PI *
-                  randChoice([normRand(-1, -0.5), normRand(0.5, 1)]) *
-                  0.2,
+                randChoice([normRand(-1, -0.5), normRand(0.5, 1)]) *
+                0.2,
               len: len * normRand(0.8, 0.9),
               ben: nben,
             });
@@ -1702,14 +1618,14 @@
       canv += poly(trlist, { xof: x, yof: y, fil: "white", str: col, wid: 0 });
 
       canv += stroke(
-        trlist.map(function(v) {
+        trlist.map(function (v) {
           return [v[0] + x, v[1] + y];
         }),
         {
           col:
             "rgba(100,100,100," + (0.6 + Math.random() * 0.1).toFixed(3) + ")",
           wid: 2.5,
-          fun: function(x) {
+          fun: function (x) {
             return Math.sin(1);
           },
           noi: 0.9,
@@ -1724,8 +1640,8 @@
     };
   }();
 
-  var Mount = new function() {
-    var foot = function(ptlist, args) {
+  var Mount = new function () {
+    var foot = function (ptlist, args) {
       var args = args != undefined ? args : {};
       var xof = args.xof != undefined ? args.xof : 0;
       var yof = args.yof != undefined ? args.yof : 0;
@@ -1747,7 +1663,7 @@
             ]);
             ftlist[ftlist.length - 1].push([
               ptlist[i][ptlist[i].length - 1 - j][0] -
-                Noise.noise(j * 0.1, i) * 10,
+              Noise.noise(j * 0.1, i) * 10,
               ptlist[i][ptlist[i].length - 1 - j][1],
             ]);
           }
@@ -1786,7 +1702,7 @@
       }
       for (var j = 0; j < ftlist.length; j++) {
         canv += stroke(
-          ftlist[j].map(function(x) {
+          ftlist[j].map(function (x) {
             return [x[0] + xof, x[1] + yof];
           }),
           {
@@ -1801,7 +1717,7 @@
       return ret ? ftlist : canv;
     };
 
-    this.mountain = function(xoff, yoff, seed, args) {
+    this.mountain = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 100 + Math.random() * 400;
       var wid = args.wid != undefined ? args.wid : 400 + Math.random() * 200;
@@ -1852,7 +1768,7 @@
       }
       //RIM
       vegetate(
-        function(x, y) {
+        function (x, y) {
           return Tree.tree02(x + xoff, y + yoff - 5, {
             col:
               "rgba(100,100,100," +
@@ -1861,13 +1777,13 @@
             clu: 2,
           });
         },
-        function(i, j) {
+        function (i, j) {
           var ns = Noise.noise(j * 0.1, seed);
           return (
             i == 0 && ns * ns * ns < 0.1 && Math.abs(ptlist[i][j][1]) / h > 0.2
           );
         },
-        function(veglist, i) {
+        function (veglist, i) {
           return true;
         },
       );
@@ -1881,7 +1797,7 @@
       });
       //OUTLINE
       canv += stroke(
-        ptlist[0].map(function(x) {
+        ptlist[0].map(function (x) {
           return [x[0] + xoff, x[1] + yoff];
         }),
         { col: "rgba(100,100,100,0.3)", noi: 1, wid: 3 },
@@ -1898,7 +1814,7 @@
 
       //TOP
       vegetate(
-        function(x, y) {
+        function (x, y) {
           return Tree.tree02(x + xoff, y + yoff, {
             col:
               "rgba(100,100,100," +
@@ -1906,11 +1822,11 @@
               ")",
           });
         },
-        function(i, j) {
+        function (i, j) {
           var ns = Noise.noise(i * 0.1, j * 0.1, seed + 2);
           return ns * ns * ns < 0.1 && Math.abs(ptlist[i][j][1]) / h > 0.5;
         },
-        function(veglist, i) {
+        function (veglist, i) {
           return true;
         },
       );
@@ -1918,7 +1834,7 @@
       if (veg) {
         //MIDDLE
         vegetate(
-          function(x, y) {
+          function (x, y) {
             var ht = ((h + y) / h) * 70;
             ht = ht * 0.3 + Math.random() * ht * 0.7;
             return Tree.tree01(x + xoff, y + yoff, {
@@ -1930,7 +1846,7 @@
                 ")",
             });
           },
-          function(i, j) {
+          function (i, j) {
             var ns = Noise.noise(i * 0.2, j * 0.05, seed);
             return (
               j % 2 &&
@@ -1938,14 +1854,14 @@
               Math.abs(ptlist[i][j][1]) / h < 0.3
             );
           },
-          function(veglist, i) {
+          function (veglist, i) {
             var counter = 0;
             for (var j = 0; j < veglist.length; j++) {
               if (
                 i != j &&
                 Math.pow(veglist[i][0] - veglist[j][0], 2) +
-                  Math.pow(veglist[i][1] - veglist[j][1], 2) <
-                  30 * 30
+                Math.pow(veglist[i][1] - veglist[j][1], 2) <
+                30 * 30
               ) {
                 counter++;
               }
@@ -1959,14 +1875,14 @@
 
         //BOTTOM
         vegetate(
-          function(x, y) {
+          function (x, y) {
             var ht = ((h + y) / h) * 120;
             ht = ht * 0.5 + Math.random() * ht * 0.5;
             var bc = Math.random() * 0.1;
             var bp = 1;
             return Tree.tree03(x + xoff, y + yoff, {
               hei: ht,
-              ben: function(x) {
+              ben: function (x) {
                 return Math.pow(x * bc, bp);
               },
               col:
@@ -1975,13 +1891,13 @@
                 ")",
             });
           },
-          function(i, j) {
+          function (i, j) {
             var ns = Noise.noise(i * 0.2, j * 0.05, seed);
             return (
               (j == 0 || j == ptlist[i].length - 1) && ns * ns * ns * ns < 0.012
             );
           },
-          function(veglist, i) {
+          function (veglist, i) {
             return true;
           },
         );
@@ -1989,7 +1905,7 @@
 
       //BOTT ARCH
       vegetate(
-        function(x, y) {
+        function (x, y) {
           var tt = randChoice([0, 0, 1, 1, 1, 2]);
           if (tt == 1) {
             return Arch.arch02(x + xoff, y + yoff, seed, {
@@ -2006,7 +1922,7 @@
             return "";
           }
         },
-        function(i, j) {
+        function (i, j) {
           var ns = Noise.noise(i * 0.2, j * 0.05, seed + 10);
           return (
             i != 0 &&
@@ -2014,36 +1930,36 @@
             ns * ns * ns * ns < 0.008
           );
         },
-        function(veglist, i) {
+        function (veglist, i) {
           return true;
         },
       );
       //TOP ARCH
       vegetate(
-        function(x, y) {
+        function (x, y) {
           return Arch.arch03(x + xoff, y + yoff, seed, {
             sto: randChoice([5, 7]),
             wid: 40 + Math.random() * 20,
           });
         },
-        function(i, j) {
+        function (i, j) {
           return (
             i == 1 &&
             Math.abs(j - ptlist[i].length / 2) < 1 &&
             Math.random() < 0.02
           );
         },
-        function(veglist, i) {
+        function (veglist, i) {
           return true;
         },
       );
 
       //TRANSM
       vegetate(
-        function(x, y) {
+        function (x, y) {
           return Arch.transmissionTower01(x + xoff, y + yoff, seed);
         },
-        function(i, j) {
+        function (i, j) {
           var ns = Noise.noise(i * 0.2, j * 0.05, seed + 20 * Math.PI);
           return (
             i % 2 == 0 &&
@@ -2051,24 +1967,24 @@
             ns * ns * ns * ns < 0.002
           );
         },
-        function(veglist, i) {
+        function (veglist, i) {
           return true;
         },
       );
 
       //BOTT ROCK
       vegetate(
-        function(x, y) {
+        function (x, y) {
           return Mount.rock(x + xoff, y + yoff, seed, {
             wid: 20 + Math.random() * 20,
             hei: 20 + Math.random() * 20,
             sha: 2,
           });
         },
-        function(i, j) {
+        function (i, j) {
           return (j == 0 || j == ptlist[i].length - 1) && Math.random() < 0.1;
         },
-        function(veglist, i) {
+        function (veglist, i) {
           return true;
         },
       );
@@ -2080,7 +1996,7 @@
       }
     };
 
-    this.flatMount = function(xoff, yoff, seed, args) {
+    this.flatMount = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 40 + Math.random() * 400;
       var wid = args.wid != undefined ? args.wid : 400 + Math.random() * 200;
@@ -2133,7 +2049,7 @@
       });
       //OUTLINE
       canv += stroke(
-        ptlist[0].map(function(x) {
+        ptlist[0].map(function (x) {
           return [x[0] + xoff, x[1] + yoff];
         }),
         { col: "rgba(100,100,100,0.3)", noi: 1, wid: 3 },
@@ -2145,7 +2061,7 @@
         yof: yoff,
         tex: tex,
         wid: 2,
-        dis: function() {
+        dis: function () {
           if (Math.random() > 0.5) {
             return 0.1 + 0.4 * Math.random();
           } else {
@@ -2204,7 +2120,7 @@
         col: "rgba(100,100,100,0.2)",
       });
 
-      var bound = function(plist) {
+      var bound = function (plist) {
         var xmin;
         var xmax;
         var ymin;
@@ -2231,7 +2147,7 @@
       return canv;
     };
 
-    this.flatDec = function(xoff, yoff, grbd) {
+    this.flatDec = function (xoff, yoff, grbd) {
       var canv = "";
 
       var tt = randChoice([0, 0, 1, 2, 3, 4]);
@@ -2306,10 +2222,10 @@
           for (var j = 0; j < Math.random() * 2; j++) {
             canv += Mount.rock(
               xoff +
-                Math.max(
-                  grbd.xmin,
-                  Math.min(grbd.xmax, xr + normRand(-50, 50)),
-                ),
+              Math.max(
+                grbd.xmin,
+                Math.min(grbd.xmax, xr + normRand(-50, 50)),
+              ),
               yoff + yr + normRand(-5, 5) + 20,
               j * i * Math.random() * 100,
               {
@@ -2366,7 +2282,7 @@
       return canv;
     };
 
-    this.distMount = function(xoff, yoff, seed, args) {
+    this.distMount = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 300;
       var len = args.len != undefined ? args.len : 2000;
@@ -2381,32 +2297,32 @@
       for (var i = 0; i < len / span / seg; i++) {
         ptlist.push([]);
         for (var j = 0; j < seg + 1; j++) {
-          var tran = function(k) {
+          var tran = function (k) {
             return [
               xoff + k * span,
               yoff -
-                hei *
-                  Noise.noise(k * 0.05, seed) *
-                  Math.pow(Math.sin((Math.PI * k) / (len / span)), 0.5),
+              hei *
+              Noise.noise(k * 0.05, seed) *
+              Math.pow(Math.sin((Math.PI * k) / (len / span)), 0.5),
             ];
           };
           ptlist[ptlist.length - 1].push(tran(i * seg + j));
         }
         for (var j = 0; j < seg / 2 + 1; j++) {
-          var tran = function(k) {
+          var tran = function (k) {
             return [
               xoff + k * span,
               yoff +
-                24 *
-                  Noise.noise(k * 0.05, 2, seed) *
-                  Math.pow(Math.sin((Math.PI * k) / (len / span)), 1),
+              24 *
+              Noise.noise(k * 0.05, 2, seed) *
+              Math.pow(Math.sin((Math.PI * k) / (len / span)), 1),
             ];
           };
           ptlist[ptlist.length - 1].unshift(tran(i * seg + j * 2));
         }
       }
       for (var i = 0; i < ptlist.length; i++) {
-        var getCol = function(x, y) {
+        var getCol = function (x, y) {
           var c = (Noise.noise(x * 0.02, y * 0.02, yoff) * 55 + 200) | 0;
           return "rgb(" + c + "," + c + "," + c + ")";
         };
@@ -2430,7 +2346,7 @@
       return canv;
     };
 
-    this.rock = function(xoff, yoff, seed, args) {
+    this.rock = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 80;
       var wid = args.wid != undefined ? args.wid : 100;
@@ -2490,7 +2406,7 @@
       });
       //OUTLINE
       canv += stroke(
-        ptlist[0].map(function(x) {
+        ptlist[0].map(function (x) {
           return [x[0] + xoff, x[1] + yoff];
         }),
         { col: "rgba(100,100,100,0.3)", noi: 1, wid: 3 },
@@ -2501,12 +2417,12 @@
         tex: tex,
         wid: 3,
         sha: sha,
-        col: function(x) {
+        col: function (x) {
           return (
             "rgba(180,180,180," + (0.3 + Math.random() * 0.3).toFixed(3) + ")"
           );
         },
-        dis: function() {
+        dis: function () {
           if (Math.random() > 0.5) {
             return 0.15 + 0.15 * Math.random();
           } else {
@@ -2522,8 +2438,8 @@
     };
   }();
 
-  var Arch = new function() {
-    var flip = function(ptlist, axis) {
+  var Arch = new function () {
+    var flip = function (ptlist, axis) {
       axis = axis == undefined ? 0 : axis;
       for (var i = 0; i < ptlist.length; i++) {
         if (ptlist[i].length > 0) {
@@ -2539,7 +2455,7 @@
       return ptlist;
     };
 
-    var hut = function(xoff, yoff, args) {
+    var hut = function (xoff, yoff, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 40;
       var wid = args.wid != undefined ? args.wid : 180;
@@ -2586,15 +2502,15 @@
         tex: tex,
         wid: 1,
         len: 0.25,
-        col: function(x) {
+        col: function (x) {
           return (
             "rgba(120,120,120," + (0.3 + Math.random() * 0.3).toFixed(3) + ")"
           );
         },
-        dis: function() {
+        dis: function () {
           return wtrand(a => a * a);
         },
-        noi: function(x) {
+        noi: function (x) {
           return 5;
         },
       });
@@ -2606,7 +2522,7 @@
       return canv;
     };
 
-    var box = function(xoff, yoff, args) {
+    var box = function (xoff, yoff, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 20;
       var wid = args.wid != undefined ? args.wid : 120;
@@ -2618,9 +2534,9 @@
       var dec =
         args.dec != undefined
           ? args.dec
-          : function(a) {
-              return [];
-            };
+          : function (a) {
+            return [];
+          };
 
       var mid = -wid * 0.5 + wid * rot;
       var bmid = -wid * 0.5 + wid * (1 - rot);
@@ -2670,14 +2586,14 @@
 
       for (var i = 0; i < ptlist.length; i++) {
         canv += stroke(
-          ptlist[i].map(function(x) {
+          ptlist[i].map(function (x) {
             return [x[0] + xoff, x[1] + yoff];
           }),
           {
             col: "rgba(100,100,100,0.4)",
             noi: 1,
             wid: wei,
-            fun: function(x) {
+            fun: function (x) {
               return 1;
             },
           },
@@ -2686,7 +2602,7 @@
       return canv;
     };
 
-    var deco = function(style, args) {
+    var deco = function (style, args) {
       var args = args != undefined ? args : {};
       var pul = args.pul != undefined ? args.pul : [0, 0];
       var pur = args.pur != undefined ? args.pur : [0, 100];
@@ -2750,7 +2666,7 @@
       return plist;
     };
 
-    var rail = function(xoff, yoff, seed, args) {
+    var rail = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 20;
       var wid = args.wid != undefined ? args.wid : 180;
@@ -2803,7 +2719,7 @@
             [
               ptlist[i][j],
               ptlist[(ptlist.length / 2 + i) % ptlist.length][
-                j % ptlist[(ptlist.length / 2 + i) % ptlist.length].length
+              j % ptlist[(ptlist.length / 2 + i) % ptlist.length].length
               ],
             ],
             2,
@@ -2821,14 +2737,14 @@
 
       for (var i = 0; i < ptlist.length; i++) {
         canv += stroke(
-          ptlist[i].map(function(x) {
+          ptlist[i].map(function (x) {
             return [x[0] + xoff, x[1] + yoff];
           }),
           {
             col: "rgba(100,100,100,0.5)",
             noi: 0.5,
             wid: wei,
-            fun: function(x) {
+            fun: function (x) {
               return 1;
             },
           },
@@ -2837,7 +2753,7 @@
       return canv;
     };
 
-    var roof = function(xoff, yoff, args) {
+    var roof = function (xoff, yoff, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 20;
       var wid = args.wid != undefined ? args.wid : 120;
@@ -2847,7 +2763,7 @@
       var wei = args.wei != undefined ? args.wei : 3;
       var pla = args.pla != undefined ? args.pla : [0, ""];
 
-      var opf = function(ptlist) {
+      var opf = function (ptlist) {
         if (rot < 0.5) {
           return flip(ptlist);
         } else {
@@ -2912,14 +2828,14 @@
 
       for (var i = 0; i < ptlist.length; i++) {
         canv += stroke(
-          ptlist[i].map(function(x) {
+          ptlist[i].map(function (x) {
             return [x[0] + xoff, x[1] + yoff];
           }),
           {
             col: "rgba(100,100,100,0.4)",
             noi: 1,
             wid: wei,
-            fun: function(x) {
+            fun: function (x) {
               return 1;
             },
           },
@@ -2955,7 +2871,7 @@
       return canv;
     };
 
-    var pagroof = function(xoff, yoff, args) {
+    var pagroof = function (xoff, yoff, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 20;
       var wid = args.wid != undefined ? args.wid : 120;
@@ -2982,14 +2898,14 @@
       canv += poly(polist, { xof: xoff, yof: yoff, str: "none", fil: "white" });
       for (var i = 0; i < ptlist.length; i++) {
         canv += stroke(
-          div(ptlist[i], 5).map(function(x) {
+          div(ptlist[i], 5).map(function (x) {
             return [x[0] + xoff, x[1] + yoff];
           }),
           {
             col: "rgba(100,100,100,0.4)",
             noi: 1,
             wid: wei,
-            fun: function(x) {
+            fun: function (x) {
               return 1;
             },
           },
@@ -2999,7 +2915,7 @@
       return canv;
     };
 
-    this.arch01 = function(xoff, yoff, seed, args) {
+    this.arch01 = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 70;
       var wid = args.wid != undefined ? args.wid : 180;
@@ -3058,7 +2974,7 @@
       return canv;
     };
 
-    this.arch02 = function(xoff, yoff, seed, args) {
+    this.arch02 = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 10;
       var wid = args.wid != undefined ? args.wid : 50;
@@ -3080,7 +2996,7 @@
           rot: rot,
           wei: 1.5,
           per: per,
-          dec: function(a) {
+          dec: function (a) {
             return deco(
               sty,
               Object.assign({}, a, {
@@ -3092,13 +3008,13 @@
         });
         canv += rai
           ? rail(xoff, yoff - hoff, i * 0.2, {
-              wid: wid * Math.pow(0.85, i) * 1.1,
-              hei: hei / 2,
-              per: per,
-              rot: rot,
-              wei: 0.5,
-              tra: false,
-            })
+            wid: wid * Math.pow(0.85, i) * 1.1,
+            hei: hei / 2,
+            per: per,
+            rot: rot,
+            wei: 0.5,
+            tra: false,
+          })
           : [];
         var pla = undefined;
         if (sto == 1 && Math.random() < 1 / 3) {
@@ -3117,7 +3033,7 @@
       }
       return canv;
     };
-    this.arch03 = function(xoff, yoff, seed, args) {
+    this.arch03 = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 10;
       var wid = args.wid != undefined ? args.wid : 50;
@@ -3137,7 +3053,7 @@
           rot: rot,
           wei: 1.5,
           per: per / 2,
-          dec: function(a) {
+          dec: function (a) {
             return deco(1, Object.assign({}, a, { hsp: [1, 4], vsp: [1, 2] }));
           },
         });
@@ -3161,7 +3077,7 @@
       }
       return canv;
     };
-    this.arch04 = function(xoff, yoff, seed, args) {
+    this.arch04 = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 15;
       var wid = args.wid != undefined ? args.wid : 30;
@@ -3181,7 +3097,7 @@
           rot: rot,
           wei: 1.5,
           per: per / 2,
-          dec: function(a) {
+          dec: function (a) {
             return [];
           },
         });
@@ -3206,7 +3122,7 @@
       return canv;
     };
 
-    this.boat01 = function(xoff, yoff, seed, args) {
+    this.boat01 = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var len = args.len != undefined ? args.len : 120;
       var sca = args.sca != undefined ? args.sca : 1;
@@ -3224,10 +3140,10 @@
 
       var plist1 = [];
       var plist2 = [];
-      var fun1 = function(x) {
+      var fun1 = function (x) {
         return Math.pow(Math.sin(x * Math.PI), 0.5) * 7 * sca;
       };
-      var fun2 = function(x) {
+      var fun2 = function (x) {
         return Math.pow(Math.sin(x * Math.PI), 0.5) * 10 * sca;
       };
       for (var i = 0; i < len * sca; i += 5 * sca) {
@@ -3238,7 +3154,7 @@
       canv += poly(plist, { xof: xoff, yof: yoff, fil: "white" });
       canv += stroke(plist.map(v => [xoff + v[0], yoff + v[1]]), {
         wid: 1,
-        fun: function(x) {
+        fun: function (x) {
           return Math.sin(x * Math.PI * 2);
         },
         col: "rgba(100,100,100,0.4)",
@@ -3247,17 +3163,17 @@
       return canv;
     };
 
-    this.transmissionTower01 = function(xoff, yoff, seed, args) {
+    this.transmissionTower01 = function (xoff, yoff, seed, args) {
       var args = args != undefined ? args : {};
       var hei = args.hei != undefined ? args.hei : 100;
       var wid = args.wid != undefined ? args.wid : 20;
 
       var canv = "";
-      var toGlobal = function(v) {
+      var toGlobal = function (v) {
         return [v[0] + xoff, v[1] + yoff];
       };
 
-      var quickstroke = function(pl) {
+      var quickstroke = function (pl) {
         return stroke(div(pl, 5).map(toGlobal), {
           wid: 1,
           fun: x => 0.5,
@@ -3321,8 +3237,8 @@
     };
   }();
 
-  var Man = new function() {
-    var expand = function(ptlist, wfun) {
+  var Man = new function () {
+    var expand = function (ptlist, wfun) {
       vtxlist0 = [];
       vtxlist1 = [];
       vtxlist = [];
@@ -3381,13 +3297,13 @@
       return [vtxlist0, vtxlist1];
     };
 
-    var tranpoly = function(p0, p1, ptlist) {
-      var plist = ptlist.map(function(v) {
+    var tranpoly = function (p0, p1, ptlist) {
+      var plist = ptlist.map(function (v) {
         return [-v[0], v[1]];
       });
       var ang = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]) - Math.PI / 2;
       var scl = distance(p0, p1);
-      var qlist = plist.map(function(v) {
+      var qlist = plist.map(function (v) {
         var d = distance(v, [0, 0]);
         var a = Math.atan2(v[1], v[0]);
         return [
@@ -3397,13 +3313,13 @@
       });
       return qlist;
     };
-    var flipper = function(plist) {
-      return plist.map(function(v) {
+    var flipper = function (plist) {
+      return plist.map(function (v) {
         return [-v[0], v[1]];
       });
     };
 
-    this.hat01 = function(p0, p1, args) {
+    this.hat01 = function (p0, p1, args) {
       var args = args != undefined ? args : {};
       var fli = args.fli != undefined ? args.fli : false;
 
@@ -3411,9 +3327,9 @@
       var seed = Math.random();
       var f = fli
         ? flipper
-        : function(x) {
-            return x;
-          };
+        : function (x) {
+          return x;
+        };
       //var plist = [[-0.5,0.5],[0.5,0.5],[0.5,1],[-0.5,2]]
       canv += poly(
         tranpoly(
@@ -3447,7 +3363,7 @@
       return canv;
     };
 
-    this.hat02 = function(p0, p1, args) {
+    this.hat02 = function (p0, p1, args) {
       var args = args != undefined ? args : {};
       var fli = args.fli != undefined ? args.fli : false;
 
@@ -3456,9 +3372,9 @@
 
       var f = fli
         ? flipper
-        : function(x) {
-            return x;
-          };
+        : function (x) {
+          return x;
+        };
       // canv += poly(tranpoly(p0,p1,[
       //   [-0.3,0.6],[-0.15,1.0],[0,1.1],[0.15,1.0],[0.3,0.6]
       //   ]),{fil:"white",str:"rgba(130,130,130,0.8)",wid:1})
@@ -3484,7 +3400,7 @@
       return canv;
     };
 
-    this.stick01 = function(p0, p1, args) {
+    this.stick01 = function (p0, p1, args) {
       var args = args != undefined ? args : {};
       var fli = args.fli != undefined ? args.fli : false;
 
@@ -3492,9 +3408,9 @@
       var seed = Math.random();
       var f = fli
         ? flipper
-        : function(x) {
-            return x;
-          };
+        : function (x) {
+          return x;
+        };
 
       var qlist1 = [];
       var l = 12;
@@ -3519,42 +3435,42 @@
     //      /3
     //     4
 
-    this.man = function(xoff, yoff, args) {
+    this.man = function (xoff, yoff, args) {
       var args = args != undefined ? args : {};
       var sca = args.sca != undefined ? args.sca : 0.5;
       var hat = args.hat != undefined ? args.hat : Man.hat01;
       var ite =
         args.ite != undefined
           ? args.ite
-          : function() {
-              return "";
-            };
+          : function () {
+            return "";
+          };
       var fli = args.fli != undefined ? args.fli : true;
       var ang =
         args.ang != undefined
           ? args.ang
           : [
-              0,
-              -Math.PI / 2,
-              normRand(0, 0),
-              (Math.PI / 4) * Math.random(),
-              ((Math.PI * 3) / 4) * Math.random(),
-              (Math.PI * 3) / 4,
-              -Math.PI / 4,
-              (-Math.PI * 3) / 4 - (Math.PI / 4) * Math.random(),
-              -Math.PI / 4,
-            ];
+            0,
+            -Math.PI / 2,
+            normRand(0, 0),
+            (Math.PI / 4) * Math.random(),
+            ((Math.PI * 3) / 4) * Math.random(),
+            (Math.PI * 3) / 4,
+            -Math.PI / 4,
+            (-Math.PI * 3) / 4 - (Math.PI / 4) * Math.random(),
+            -Math.PI / 4,
+          ];
       var len =
         args.len != undefined ? args.len : [0, 30, 20, 30, 30, 30, 30, 30, 30];
 
-      len = len.map(function(v) {
+      len = len.map(function (v) {
         return v * sca;
       });
       var canv = "";
       var sct = {
         0: { 1: { 2: {}, 5: { 6: {} }, 7: { 8: {} } }, 3: { 4: {} } },
       };
-      var toGlobal = function(v) {
+      var toGlobal = function (v) {
         return [(fli ? -1 : 1) * v[0] + xoff, v[1] + yoff];
       };
 
@@ -3604,7 +3520,7 @@
         //canv += stroke(s.map(toGlobal))
       }
 
-      var cloth = function(plist, fun) {
+      var cloth = function (plist, fun) {
         var canv = "";
         var tlist = bezmh(plist, 2);
         var [tlist1, tlist2] = expand(tlist, fun);
@@ -3623,7 +3539,7 @@
         return canv;
       };
 
-      var fsleeve = function(x) {
+      var fsleeve = function (x) {
         return (
           sca *
           8 *
@@ -3631,7 +3547,7 @@
             (1 - x) * 0.4)
         );
       };
-      var fbody = function(x) {
+      var fbody = function (x) {
         return (
           sca *
           11 *
@@ -3639,7 +3555,7 @@
             (1 - x) * 0.5)
         );
       };
-      var fhead = function(x) {
+      var fhead = function (x) {
         return sca * 7 * Math.pow(0.25 - Math.pow(x - 0.5, 2), 0.3);
       };
 
@@ -3689,7 +3605,7 @@
 
     for (var j = 1; j < ptlist.length; j += 1) {
       canv += stroke(
-        ptlist[j].map(function(x) {
+        ptlist[j].map(function (x) {
           return [x[0] + xoff, x[1] + yoff];
         }),
         {
@@ -3733,16 +3649,16 @@
 
     var reg = [];
     var samp = 0.03;
-    var ns = function(x, y) {
+    var ns = function (x, y) {
       return Math.max(Noise.noise(x * samp) - 0.55, 0) * 2;
     };
-    var nns = function(x) {
+    var nns = function (x) {
       return 1 - Noise.noise(x * samp);
     };
-    var nnns = function(x, y) {
+    var nnns = function (x, y) {
       return Math.max(Noise.noise(x * samp * 2, 2) - 0.55, 0) * 2;
     };
-    var yr = function(x) {
+    var yr = function (x) {
       return Noise.noise(x * 0.01, Math.PI);
     };
 
@@ -3843,7 +3759,7 @@
   }
 
   function chunkloader(xmin, xmax) {
-    var add = function(nch) {
+    var add = function (nch) {
       if (nch.canv.includes("NaN")) {
         console.log("gotcha:");
         console.log(nch.tag);
@@ -4067,7 +3983,7 @@
   function autoxcroll(v) {
     if (document.getElementById("AUTO_SCROLL").checked) {
       xcroll(v);
-      setTimeout(function() {
+      setTimeout(function () {
         autoxcroll(v);
       }, 2000);
     }
@@ -4087,12 +4003,12 @@
     cursor: pointer;\
     border: 1px solid rgba(0,0,0,0.4);\
     background-color:rgba(0,0,0," +
-          a +
-          ");\
+        a +
+        ");\
   " +
-          "height:" +
-          MEM.windy +
-          "px"
+        "height:" +
+        MEM.windy +
+        "px"
       );
     document.getElementById(id + ".t").setAttribute(
       "style",
@@ -4133,18 +4049,13 @@
 </script>
 
 <body style="margin:0">
-  <div
-    id="SETTING"
-    style="
+  <div id="SETTING" style="
     position:fixed; 
     z-index:1000; 
     left: 40; 
     top: 3;
-    "
-  >
-    <div
-      id="SET_BTN"
-      style="
+    ">
+    <div id="SET_BTN" style="
       width:32;
       height:32;
       color:rgba(0,0,0,0.4);
@@ -4152,17 +4063,14 @@
       text-align: center;
       display: table;
       cursor: pointer;
-      "
-      onmouseover="document.getElementById('SET_BTN').style.backgroundColor=btnHoverCol"
+      " onmouseover="document.getElementById('SET_BTN').style.backgroundColor=btnHoverCol"
       onmouseout="document.getElementById('SET_BTN').style.backgroundColor='rgba(0,0,0,0)'"
-      onclick="toggleVisible('MENU');toggleText('SET_BTN.t','&#x2630;','&#x2715;')"
-      title="Settings"
-    >
+      onclick="toggleVisible('MENU');toggleText('SET_BTN.t','&#x2630;','&#x2715;')" title="Settings">
       <div style="display:table-cell; vertical-align: middle;">
         <font id="SET_BTN.t" size="4px"> &#x2630; </font>
       </div>
       <script>
-        window.addEventListener("scroll", function(e) {
+        window.addEventListener("scroll", function (e) {
           document.getElementById("SETTING").style.left = Math.max(
             4,
             40 - window.scrollX
@@ -4171,54 +4079,38 @@
       </script>
     </div>
     <div style="height:4px"></div>
-    <div
-      id="MENU"
-      style="
+    <div id="MENU" style="
       display:none;
       background-color: rgba(0,0,0,0.1);
       border: 1px solid rgba(0,0,0,0.4);
-      "
-    >
+      ">
       <table>
         <tr>
-          <td><pre>SEED</pre></td>
+          <td>
+            <pre>SEED</pre>
+          </td>
         </tr>
         <tr>
           <td>
             <input title="random seed" id="INP_SEED" />
-            <button
-              onclick="reloadWSeed(document.getElementById('INP_SEED').value)"
-            >
+            <button onclick="reloadWSeed(document.getElementById('INP_SEED').value)">
               Generate
             </button>
           </td>
         </tr>
         <tr>
-          <td><pre>VIEW</pre></td>
+          <td>
+            <pre>VIEW</pre>
+          </td>
         </tr>
         <tr>
           <td>
-            <button
-              title="view left"
-              onclick="xcroll(-parseFloat(document.getElementById('INC_STEP').value))"
-            >
-              <
-            </button>
-            <input
-              title="increment step"
-              id="INC_STEP"
-              type="number"
-              value="200"
-              min="0"
-              max="10000"
-              step="20"
-            />
-            <button
-              title="view right"
-              onclick="xcroll(parseFloat(document.getElementById('INC_STEP').value))"
-            >
-              >
-            </button>
+            <button title="view left" onclick="xcroll(-parseFloat(document.getElementById('INC_STEP').value))">
+              < </button>
+                <input title="increment step" id="INC_STEP" type="number" value="200" min="0" max="10000" step="20" />
+                <button title="view right" onclick="xcroll(parseFloat(document.getElementById('INC_STEP').value))">
+                  >
+                </button>
           </td>
         </tr>
 
@@ -4232,17 +4124,14 @@
         </tr>
 
         <tr>
-          <td><pre>SAVE</pre></td>
+          <td>
+            <pre>SAVE</pre>
+          </td>
         </tr>
         <tr>
           <td>
-            <button
-              title="WARNING: This may take a while..."
-              type="button"
-              id="dwn-btn"
-              value="Download as SVG"
-              onclick="download(''+(Math.random())+'.svg', document.getElementById('BG').innerHTML);"
-            >
+            <button title="WARNING: This may take a while..." type="button" id="dwn-btn" value="Download as SVG"
+              onclick="download(''+(Math.random())+'.svg', document.getElementById('BG').innerHTML);">
               Download as .SVG
             </button>
           </td>
@@ -4251,9 +4140,7 @@
     </div>
   </div>
 
-  <div
-    id="SOURCE_BTN"
-    style="
+  <div id="SOURCE_BTN" style="
       position:fixed; 
       z-index:1000; 
       left: 77; 
@@ -4264,17 +4151,14 @@
       border: 1px solid rgba(0,0,0,0.4);
       text-align: center;
       display: table;
-      cursor: pointer;"
-    onmouseover="document.getElementById('SOURCE_BTN').style.backgroundColor=btnHoverCol"
+      cursor: pointer;" onmouseover="document.getElementById('SOURCE_BTN').style.backgroundColor=btnHoverCol"
     onmouseout="document.getElementById('SOURCE_BTN').style.backgroundColor='rgba(0,0,0,0)'"
-    onclick="window.location='https://github.com/LingDong-/shan-shui-inf';"
-    title="Fork me on Github!"
-  >
+    onclick="window.location='https://github.com/LingDong-/shan-shui-inf';" title="Fork me on Github!">
     <div style="display:table-cell; vertical-align: middle;">
       <font id="SET_BTN.t" size="4px"> &lt;/&gt; </font>
     </div>
     <script>
-      window.addEventListener("scroll", function(e) {
+      window.addEventListener("scroll", function (e) {
         document.getElementById("SOURCE_BTN").style.left = Math.max(
           41,
           77 - window.scrollX
@@ -4286,13 +4170,10 @@
   <table style="border-bottom: 1px solid rgba(0,0,0,0.1);">
     <tr>
       <td>
-        <div
-          id="L"
-          onmouseover="rstyle('L',true)"
-          onmouseout="rstyle('L',false)"
-          onclick="xcroll(-200)"
-        >
-          <div id="L.t"><font size="6px">&#x3008;</font></div>
+        <div id="L" onmouseover="rstyle('L',true)" onmouseout="rstyle('L',false)" onclick="xcroll(-200)">
+          <div id="L.t">
+            <font size="6px">&#x3008;</font>
+          </div>
           <script>
             rstyle("L", false);
           </script>
@@ -4317,13 +4198,10 @@
       </td>
 
       <td>
-        <div
-          id="R"
-          onmouseover="rstyle('R',true)"
-          onmouseout="rstyle('R',false)"
-          onclick="xcroll(200)"
-        >
-          <div id="R.t"><font size="6px">&#x3009;</font></div>
+        <div id="R" onmouseover="rstyle('R',true)" onmouseout="rstyle('R',false)" onclick="xcroll(200)">
+          <div id="R.t">
+            <font size="6px">&#x3009;</font>
+          </div>
           <script>
             rstyle("R", false);
           </script>
@@ -4332,7 +4210,6 @@
     </tr>
   </table>
 </body>
-<script src="./build/index.js" type="module"></script>
 <canvas id="bgcanv" width="512" height="512" hidden> </canvas>
 <script>
   var canvas = document.getElementById("bgcanv");
