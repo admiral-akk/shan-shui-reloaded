@@ -42,10 +42,7 @@ export class PseudoRandomNumberGenerator {
         return this.s / this.m;
     }
 
-    test(f?: () => number, sampleCount: number = 10000000, buckets: number = 10): number[] {
-        if (!f) {
-            f = () => this.next();
-        }
+    test(sampleCount: number = 10000000, buckets: number = 10): number[] {
         const t0 = Date.now();
 
         const chart: number[] = [];
@@ -53,7 +50,7 @@ export class PseudoRandomNumberGenerator {
             chart.push(0);
         }
         for (let i = 0; i < sampleCount; i++) {
-            chart[Math.floor(f() * buckets)] += 1;
+            chart[Math.floor(this.next() * buckets)] += 1;
         }
         console.log(chart);
         console.log(`Finished in: ${Date.now() - t0}ms`);
