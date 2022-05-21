@@ -3,7 +3,9 @@ import { blob } from "./Blob";
 import { div } from "./Div";
 import { Distance } from "./GeometryUtils";
 import { Man } from "./Man";
+import { Memory } from "./Memory";
 import { Mount } from "./Mount";
+import { MountPlanner } from "./MountPlanner";
 import { PerlinNoise } from "./PerlinNoise";
 import { Point } from "./Point";
 import { PolyTools } from "./PolyTools";
@@ -12,6 +14,7 @@ import { texture } from "./Texture";
 import { Tree } from "./Tree";
 import { UniformRNG } from "./UniformRNG";
 import { bezmh, loopNoise, mapval, normRand, poly, randChoice, randGaussian, unNan, wtrand } from "./Utils";
+import { water } from "./Water";
 
 declare global {
     interface Window {
@@ -36,10 +39,15 @@ declare global {
         Mount: Mount,
         Arch: Arch,
         Man: Man,
+        water: (xoff: number, yoff: number, seed: number, args: any) => string;
+        mountplanner: (xmin: number, xmax: number) => any[];
+        MEM: Memory;
     }
 }
 
-export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin: PerlinNoise, polyTools: PolyTools, tree: Tree, mount: Mount, arch: Arch, man: Man) {
+export function InitializeGlobalVariables(rng: UniformRNG, seed: string,
+    perlin: PerlinNoise, polyTools: PolyTools, tree: Tree, mount: Mount, arch: Arch, man: Man, mountPlanner: MountPlanner,
+    memory: Memory) {
     Math.random = () => rng.random();
     window.SEED = seed;
     window.Noise = perlin;
@@ -63,4 +71,7 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin:
     window.Mount = mount;
     window.Arch = arch;
     window.Man = man;
+    window.water = (xoff: number, yoff: number, seed: number, args: any) => water(xoff, yoff, seed, args, perlin);
+    window.mountplanner = (xmin: number, xmax: number) => mountPlanner.mountplanner(xmin, xmax, memory);
+    window.MEM = memory;
 }
