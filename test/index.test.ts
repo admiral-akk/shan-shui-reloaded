@@ -1,5 +1,4 @@
-import { UniformRNG } from '../src/PseudoRandomNumberGenerator';
-
+import { UniformRNG } from '../src/UniformRNG';
 
 describe('testing rng distribution', () => {
     test('random numbers should be roughly evenly distributed.', () => {
