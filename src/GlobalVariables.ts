@@ -5,6 +5,7 @@ import { PerlinNoise } from "./PerlinNoise";
 import { Point } from "./Point";
 import { PolyTools } from "./PolyTools";
 import { stroke } from "./Stroke";
+import { texture } from "./Texture";
 import { UniformRNG } from "./UniformRNG";
 import { bezmh, loopNoise, mapval, normRand, poly, randChoice, randGaussian, unNan, wtrand } from "./Utils";
 
@@ -26,6 +27,7 @@ declare global {
         stroke: (ptlist: Point[], args: any) => string;
         blob: (x: number, y: number, args: any, noise: PerlinNoise) => string | Point[];
         div: (plist: Point[], reso: number) => Point[];
+        texture: (ptlist: Point[][], args: any) => Point[][] | string;
     }
 }
 
@@ -48,4 +50,5 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin:
     window.stroke = (plist: Point[], args: any) => stroke(plist, args, perlin);
     window.blob = (x: number, y: number, args: any) => blob(x, y, args, perlin);
     window.div = (plist: Point[], reso: number) => div(plist, reso);
+    window.texture = (ptlist: Point[][], args: any) => texture(ptlist, args, perlin);
 }
