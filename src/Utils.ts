@@ -100,7 +100,7 @@ export function bezmh(polyTool: PolyTools, P: Point[], w?: number) {
     return plist;
 }
 
-export function poly(plist: Point[], args: any) {
+export function poly(plist: Point[], args: any): string {
     var args = args != undefined ? args : {};
     var xof = args.xof != undefined ? args.xof : 0;
     var yof = args.yof != undefined ? args.yof : 0;
