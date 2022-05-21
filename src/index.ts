@@ -10,6 +10,7 @@ import { Man } from "./Man";
 import { MountPlanner } from "./MountPlanner";
 import { Memory } from "./Memory";
 import { Update } from "./Update";
+import { UI } from "./UI";
 
 const rng = new UniformRNG();
 
@@ -26,6 +27,7 @@ const arch = new Arch(perlin, polyTools, man);
 const mount = new Mount(perlin, tree, arch, polyTools);
 const mountPlanner = new MountPlanner(perlin, memory);
 const update = new Update(memory, mountPlanner, mount, perlin, arch);
+const ui = new UI(memory, update);
 
 // We add global variables at the end to ensure that we don't inadvertidly depend on them in our Typescript.
-InitializeGlobalVariables(rng, seed, perlin, polyTools, tree, mount, arch, man, mountPlanner, memory, update);
+InitializeGlobalVariables(rng, seed, perlin, polyTools, tree, mount, arch, man, mountPlanner, memory, update, ui);

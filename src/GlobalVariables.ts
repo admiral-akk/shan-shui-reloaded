@@ -13,6 +13,7 @@ import { PolyTools } from "./PolyTools";
 import { stroke } from "./Stroke";
 import { texture } from "./Texture";
 import { Tree } from "./Tree";
+import { UI } from "./UI";
 import { UniformRNG } from "./UniformRNG";
 import { Update } from "./Update";
 import { bezmh, loopNoise, mapval, normRand, poly, randChoice, randGaussian, unNan, wtrand } from "./Utils";
@@ -48,12 +49,13 @@ declare global {
         needupdate: () => boolean;
         update: () => void;
         download: (filename: string, text: string) => void;
+        UI: UI;
     }
 }
 
 export function InitializeGlobalVariables(rng: UniformRNG, seed: string,
     perlin: PerlinNoise, polyTools: PolyTools, tree: Tree, mount: Mount, arch: Arch, man: Man, mountPlanner: MountPlanner,
-    memory: Memory, update: Update) {
+    memory: Memory, update: Update, ui: UI) {
     Math.random = () => rng.random();
     window.SEED = seed;
     window.Noise = perlin;
@@ -84,4 +86,5 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string,
     window.needupdate = () => update.needupdate();
     window.update = () => update.update();
     window.download = (filename: string, text: string) => download(filename, text);
+    window.UI = ui;
 }
