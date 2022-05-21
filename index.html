@@ -3,21 +3,6 @@
 
 
 <script>
-  function dummyloader(xmin, xmax) {
-    for (var i = xmin; i < xmax; i += 200) {
-      //MEM.chunks.push({tag:"?",x:i,y:100,canv:Tree.tree08(i,500,i)})
-      //MEM.chunks.push({tag:"?",x:i,y:100,canv:Man.man(i,500)})
-      //MEM.chunks.push({tag:"?",x:i,y:100,canv:Arch.arch01(i,500)})
-      //MEM.chunks.push({tag:"?",x:i,y:100,canv:Arch.boat01(i,500)})
-      //MEM.chunks.push({tag:"?",x:i,y:100,canv:Arch.transmissionTower01(i,500)})
-      MEM.chunks.push({
-        tag: "?",
-        x: i,
-        y: 100,
-        canv: Arch.arch02(i, 500, 0, { sto: 1, rot: Math.random() }),
-      });
-    }
-  }
 
   function chunkloader(xmin, xmax) {
     var add = function (nch) {
