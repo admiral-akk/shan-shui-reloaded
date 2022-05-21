@@ -1,0 +1,71 @@
+body {
+    margin: 0px
+}
+
+#SETTING {
+    position: fixed;
+    z-index: 1000;
+    left: 40px;
+    top: 3px;
+}
+
+#SET_BTN {
+    width: 32px;
+    height: 32px;
+    color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    text-align: center;
+    display: table;
+    cursor: pointer;
+}
+
+#SET_BTN>div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#SET_BTN\.t {
+    size: 4px;
+}
+
+#SOURCE_BTN {
+    position: fixed;
+    z-index: 1000;
+    left: 77px;
+    top: 3px;
+    width: 32px;
+    height: 32px;
+    color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    text-align: center;
+    display: table;
+    cursor: pointer;
+}
+
+#SOURCE_BTN>div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#SOURCE_BTN\.t {
+    size: 4px;
+}
+
+#MENU {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+
+}
+
+body>table {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#L\.t>font {
+    size: 6px;
+}
+
+#R\.t>font {
+    size: 6px;
+}

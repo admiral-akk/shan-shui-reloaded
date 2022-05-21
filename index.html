@@ -1,26 +1,14 @@
 <script>var exports = {};</script>
 <script src="./dist/main.js"></script>
+<link rel="stylesheet" href="index.css">
 
-<body style="margin:0">
-  <div id="SETTING" style="
-    position:fixed; 
-    z-index:1000; 
-    left: 40; 
-    top: 3;
-    ">
-    <div id="SET_BTN" style="
-      width:32;
-      height:32;
-      color:rgba(0,0,0,0.4);
-      border: 1px solid rgba(0,0,0,0.4);
-      text-align: center;
-      display: table;
-      cursor: pointer;
-      " onmouseover="document.getElementById('SET_BTN').style.backgroundColor=UI.btnHoverCol"
+<body>
+  <div id="SETTING">
+    <div id="SET_BTN" onmouseover="document.getElementById('SET_BTN').style.backgroundColor=UI.btnHoverCol"
       onmouseout="document.getElementById('SET_BTN').style.backgroundColor='rgba(0,0,0,0)'"
       onclick="UI.toggleVisible('MENU');UI.toggleText('SET_BTN.t','&#x2630;','&#x2715;')" title="Settings">
-      <div style="display:table-cell; vertical-align: middle;">
-        <font id="SET_BTN.t" size="4px"> &#x2630; </font>
+      <div>
+        <font id="SET_BTN.t"> &#x2630; </font>
       </div>
       <script>
         window.addEventListener("scroll", function (e) {
@@ -32,11 +20,7 @@
       </script>
     </div>
     <div style="height:4px"></div>
-    <div id="MENU" style="
-      display:none;
-      background-color: rgba(0,0,0,0.1);
-      border: 1px solid rgba(0,0,0,0.4);
-      ">
+    <div id="MENU">
       <table>
         <tr>
           <td>
@@ -93,22 +77,11 @@
     </div>
   </div>
 
-  <div id="SOURCE_BTN" style="
-      position:fixed; 
-      z-index:1000; 
-      left: 77; 
-      top: 3;
-      width:32;
-      height:32;
-      color:rgba(0,0,0,0.4);
-      border: 1px solid rgba(0,0,0,0.4);
-      text-align: center;
-      display: table;
-      cursor: pointer;" onmouseover="document.getElementById('SOURCE_BTN').style.backgroundColor=UI.btnHoverCol"
+  <div id="SOURCE_BTN" onmouseover="document.getElementById('SOURCE_BTN').style.backgroundColor=UI.btnHoverCol"
     onmouseout="document.getElementById('SOURCE_BTN').style.backgroundColor='rgba(0,0,0,0)'"
     onclick="window.location='https://github.com/LingDong-/shan-shui-inf';" title="Fork me on Github!">
-    <div style="display:table-cell; vertical-align: middle;">
-      <font id="SET_BTN.t" size="4px"> &lt;/&gt; </font>
+    <div>
+      <font id="SET_BTN.t"> &lt;/&gt; </font>
     </div>
     <script>
       window.addEventListener("scroll", function (e) {
@@ -120,12 +93,12 @@
     </script>
   </div>
 
-  <table style="border-bottom: 1px solid rgba(0,0,0,0.1);">
+  <table>
     <tr>
       <td>
         <div id="L" onmouseover="UI.rstyle('L',true)" onmouseout="UI.rstyle('L',false)" onclick="UI.xcroll(-200)">
           <div id="L.t">
-            <font size="6px">&#x3008;</font>
+            <font>&#x3008;</font>
           </div>
           <script>
             UI.rstyle("L", false);
@@ -153,7 +126,7 @@
       <td>
         <div id="R" onmouseover="UI.rstyle('R',true)" onmouseout="UI.rstyle('R',false)" onclick="UI.xcroll(200)">
           <div id="R.t">
-            <font size="6px">&#x3009;</font>
+            <font>&#x3009;</font>
           </div>
           <script>
             UI.rstyle("R", false);
