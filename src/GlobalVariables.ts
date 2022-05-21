@@ -1,3 +1,4 @@
+import { blob } from "./Blob";
 import { Distance } from "./GeometryUtils";
 import { PerlinNoise } from "./PerlinNoise";
 import { Point } from "./Point";
@@ -22,6 +23,7 @@ declare global {
         bezmh: (P: Point[], w?: number) => Point[];
         poly: (plist: Point[], args: any) => string;
         stroke: (ptlist: Point[], args: any) => string;
+        blob: (x: number, y: number, args: any, noise: PerlinNoise) => string | Point[];
     }
 }
 
@@ -42,4 +44,5 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin:
     window.bezmh = (P: Point[], w?: number) => bezmh(polyTools, P, w);
     window.poly = (plist: Point[], args: any) => poly(plist, args);
     window.stroke = (plist: Point[], args: any) => stroke(plist, args, perlin);
+    window.blob = (x: number, y: number, args: any) => blob(x, y, args, perlin);
 }
