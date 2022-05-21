@@ -14,7 +14,7 @@ export class Arch {
         axis = axis == undefined ? 0 : axis;
         for (var i = 0; i < ptlist.length; i++) {
             if (ptlist[i].length > 0) {
-                if (typeof ptlist[i] == "object") {
+                if (typeof ptlist[i][0] !== 'number') {
                     const list = ptlist[i] as Point[];
                     for (var j = 0; j < ptlist[i].length; j++) {
                         list[j][0] = axis - (list[j][0] - axis);
@@ -577,7 +577,7 @@ export class Arch {
                 dec: (arg: any) => {
                     return this.deco(
                         sty,
-                        Object.assign({}, a, {
+                        Object.assign({}, arg, {
                             hsp: [[], [1, 5], [1, 5], [1, 4]][sty],
                             vsp: [[], [1, 2], [1, 2], [1, 3]][sty],
                         }),
@@ -632,7 +632,7 @@ export class Arch {
                 wei: 1.5,
                 per: per / 2,
                 dec: (arg: any) => {
-                    return this.deco(1, Object.assign({}, a, { hsp: [1, 4], vsp: [1, 2] }));
+                    return this.deco(1, Object.assign({}, arg, { hsp: [1, 4], vsp: [1, 2] }));
                 },
             });
             canv += this.rail(xoff, yoff - hoff, i * 0.2, {
@@ -675,7 +675,7 @@ export class Arch {
                 rot: rot,
                 wei: 1.5,
                 per: per / 2,
-                dec: function (a) {
+                dec: function (arg: any) {
                     return [];
                 },
             });
@@ -709,8 +709,8 @@ export class Arch {
 
         var dir = fli ? -1 : 1;
         canv += this.Man.man(xoff + 20 * sca * dir, yoff, {
-            ite: this.Man.stick01,
-            hat: this.Man.hat02,
+            ite: (p1: Point, p2: Point, arg: any) => this.Man.stick01(p1, p2, arg),
+            hat: (p1: Point, p2: Point, arg: any) => this.Man.hat02(p1, p2, arg),
             sca: 0.5 * sca,
             fli: !fli,
             len: [0, 30, 20, 30, 10, 30, 30, 30, 30],
@@ -732,7 +732,7 @@ export class Arch {
         canv += poly(plist, { xof: xoff, yof: yoff, fil: "white" });
         canv += stroke(plist.map(v => [xoff + v[0], yoff + v[1]]), {
             wid: 1,
-            fun: function (x) {
+            fun: function (x: number) {
                 return Math.sin(x * Math.PI * 2);
             },
             col: "rgba(100,100,100,0.4)",
@@ -742,7 +742,7 @@ export class Arch {
         return canv;
     };
 
-    transmissionTower01(xoff: number, yoff: number, seed: number, args: any) {
+    transmissionTower01(xoff: number, yoff: number, seed: number, args?: any) {
         var args = args != undefined ? args : {};
         var hei = args.hei != undefined ? args.hei : 100;
         var wid = args.wid != undefined ? args.wid : 20;

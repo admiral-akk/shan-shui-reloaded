@@ -2,6 +2,7 @@ import { Arch } from "./Arch";
 import { blob } from "./Blob";
 import { div } from "./Div";
 import { Distance } from "./GeometryUtils";
+import { Man } from "./Man";
 import { Mount } from "./Mount";
 import { PerlinNoise } from "./PerlinNoise";
 import { Point } from "./Point";
@@ -34,10 +35,11 @@ declare global {
         Tree: Tree,
         Mount: Mount,
         Arch: Arch,
+        Man: Man,
     }
 }
 
-export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin: PerlinNoise, polyTools: PolyTools, tree: Tree, mount: Mount, arch: Arch) {
+export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin: PerlinNoise, polyTools: PolyTools, tree: Tree, mount: Mount, arch: Arch, man: Man) {
     Math.random = () => rng.random();
     window.SEED = seed;
     window.Noise = perlin;
@@ -60,4 +62,5 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin:
     window.Tree = tree;
     window.Mount = mount;
     window.Arch = arch;
+    window.Man = man;
 }

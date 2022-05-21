@@ -6,6 +6,7 @@ import { stroke } from "./Stroke";
 import { texture } from "./Texture";
 import { Tree } from "./Tree";
 import { loopNoise, normRand, poly, randChoice } from "./Utils";
+import { Arch } from "./Arch";
 
 export class Mount {
     constructor(private Noise: PerlinNoise, private Tree: Tree, private Arch: Arch, private PolyTools: PolyTools) { }
@@ -256,7 +257,7 @@ export class Mount {
                     var bp = 1;
                     return this.Tree.tree03(x + xoff, y + yoff, {
                         hei: ht,
-                        ben: function (x) {
+                        ben: function (x: number) {
                             return Math.pow(x * bc, bp);
                         },
                         col:
@@ -799,7 +800,7 @@ export class Mount {
             tex: tex,
             wid: 3,
             sha: sha,
-            col: function (x) {
+            col: function (x: number) {
                 return (
                     "rgba(180,180,180," + (0.3 + Math.random() * 0.3).toFixed(3) + ")"
                 );

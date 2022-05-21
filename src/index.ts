@@ -17,9 +17,9 @@ const perlin = new PerlinNoise(rng);
 const polyTools = new PolyTools();
 
 const tree = new Tree(perlin, polyTools);
-const man = new Man();
+const man = new Man(perlin, polyTools);
 const arch = new Arch(perlin, polyTools, man);
 const mount = new Mount(perlin, tree, arch, polyTools);
 
 // We add global variables at the end to ensure that we don't inadvertidly depend on them in our Typescript.
-InitializeGlobalVariables(rng, seed, perlin, polyTools, tree, mount, arch);
+InitializeGlobalVariables(rng, seed, perlin, polyTools, tree, mount, arch, man);
