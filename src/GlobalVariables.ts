@@ -6,6 +6,7 @@ import { Point } from "./Point";
 import { PolyTools } from "./PolyTools";
 import { stroke } from "./Stroke";
 import { texture } from "./Texture";
+import { Tree } from "./Tree";
 import { UniformRNG } from "./UniformRNG";
 import { bezmh, loopNoise, mapval, normRand, poly, randChoice, randGaussian, unNan, wtrand } from "./Utils";
 
@@ -28,10 +29,11 @@ declare global {
         blob: (x: number, y: number, args: any, noise: PerlinNoise) => string | Point[];
         div: (plist: Point[], reso: number) => Point[];
         texture: (ptlist: Point[][], args: any) => Point[][] | string;
+        Tree: Tree,
     }
 }
 
-export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin: PerlinNoise, polyTools: PolyTools) {
+export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin: PerlinNoise, polyTools: PolyTools, tree: Tree) {
     Math.random = () => rng.random();
     window.SEED = seed;
     window.Noise = perlin;
@@ -51,4 +53,5 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string, perlin:
     window.blob = (x: number, y: number, args: any) => blob(x, y, args, perlin);
     window.div = (plist: Point[], reso: number) => div(plist, reso);
     window.texture = (ptlist: Point[][], args: any) => texture(ptlist, args, perlin);
+    window.Tree = tree;
 }
