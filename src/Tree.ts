@@ -69,7 +69,7 @@ export class Tree {
             poly(line2, { fil: "none", str: col, wid: 1.5 });
         return canv;
     };
-    tree02(x: number, y: number, args: any): string {
+    tree02(x: number, y: number, args?: any): string {
         var args = args != undefined ? args : {};
         var hei = args.hei != undefined ? args.hei : 16;
         var wid = args.wid != undefined ? args.wid : 8;
