@@ -13,6 +13,7 @@ import { stroke } from "./Stroke";
 import { texture } from "./Texture";
 import { Tree } from "./Tree";
 import { UniformRNG } from "./UniformRNG";
+import { Update } from "./Update";
 import { bezmh, loopNoise, mapval, normRand, poly, randChoice, randGaussian, unNan, wtrand } from "./Utils";
 import { water } from "./Water";
 
@@ -42,12 +43,15 @@ declare global {
         water: (xoff: number, yoff: number, seed: number, args: any) => string;
         mountplanner: (xmin: number, xmax: number) => any[];
         MEM: Memory;
+        viewupdate: () => void;
+        needupdate: () => boolean;
+        update: () => void;
     }
 }
 
 export function InitializeGlobalVariables(rng: UniformRNG, seed: string,
     perlin: PerlinNoise, polyTools: PolyTools, tree: Tree, mount: Mount, arch: Arch, man: Man, mountPlanner: MountPlanner,
-    memory: Memory) {
+    memory: Memory, update: Update) {
     Math.random = () => rng.random();
     window.SEED = seed;
     window.Noise = perlin;
@@ -72,6 +76,9 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string,
     window.Arch = arch;
     window.Man = man;
     window.water = (xoff: number, yoff: number, seed: number, args: any) => water(xoff, yoff, seed, args, perlin);
-    window.mountplanner = (xmin: number, xmax: number) => mountPlanner.mountplanner(xmin, xmax, memory);
+    window.mountplanner = (xmin: number, xmax: number) => mountPlanner.mountplanner(xmin, xmax);
     window.MEM = memory;
+    window.viewupdate = () => update.viewupdate();
+    window.needupdate = () => update.needupdate();
+    window.update = () => update.update();
 }

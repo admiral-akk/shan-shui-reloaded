@@ -1,7 +1,8 @@
+import { Memory } from "./Memory";
 import { PerlinNoise } from "./PerlinNoise";
 
 export class MountPlanner {
-    constructor(private Noise: PerlinNoise) { }
+    constructor(private Noise: PerlinNoise, private MEM: Memory) { }
     private locmax(x: number, y: number, f: (x: number, y: number) => number, r: number): boolean {
         var z0 = f(x, y);
         if (z0 <= 0.3) {
@@ -29,7 +30,7 @@ export class MountPlanner {
         return true;
     }
 
-    mountplanner(xmin: number, xmax: number, MEM: any): any[] {
+    mountplanner(xmin: number, xmax: number): any[] {
 
         var reg: any[] = [];
         var samp = 0.03;
@@ -50,7 +51,7 @@ export class MountPlanner {
         var mwid = 200;
         for (var i = xmin; i < xmax; i += xstep) {
             var i1 = Math.floor(i / xstep);
-            MEM.planmtx[i1] = MEM.planmtx[i1] || 0;
+            this.MEM.planmtx[i1] = this.MEM.planmtx[i1] || 0;
         }
 
         for (var i = xmin; i < xmax; i += xstep) {
@@ -66,7 +67,7 @@ export class MountPlanner {
                             k < (xof + mwid) / xstep;
                             k++
                         ) {
-                            MEM.planmtx[k] += 1;
+                            this.MEM.planmtx[k] += 1;
                         }
                     }
                 }
@@ -83,7 +84,7 @@ export class MountPlanner {
         }
         console.log([xmin, xmax]);
         for (var i = xmin; i < xmax; i += xstep) {
-            if (MEM.planmtx[Math.floor(i / xstep)] == 0) {
+            if (this.MEM.planmtx[Math.floor(i / xstep)] == 0) {
                 //var r = {tag:"redcirc",x:i,y:700}
                 //console.log(i)
                 if (Math.random() < 0.01) {

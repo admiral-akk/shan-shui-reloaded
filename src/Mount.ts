@@ -103,7 +103,7 @@ export class Mount {
         }
     }
 
-    mountain(xoff: number, yoff: number, seed: number, args: any) {
+    mountain(xoff: number, yoff: number, seed: number, args?: any) {
         var args = args != undefined ? args : {};
         var hei = args.hei != undefined ? args.hei : 100 + Math.random() * 400;
         var wid = args.wid != undefined ? args.wid : 400 + Math.random() * 200;
