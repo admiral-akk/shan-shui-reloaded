@@ -1,6 +1,7 @@
 import { Arch } from "./Arch";
 import { blob } from "./Blob";
 import { div } from "./Div";
+import { download } from "./Downloader";
 import { Distance } from "./GeometryUtils";
 import { Man } from "./Man";
 import { Memory } from "./Memory";
@@ -46,6 +47,7 @@ declare global {
         viewupdate: () => void;
         needupdate: () => boolean;
         update: () => void;
+        download: (filename: string, text: string) => void;
     }
 }
 
@@ -81,4 +83,5 @@ export function InitializeGlobalVariables(rng: UniformRNG, seed: string,
     window.viewupdate = () => update.viewupdate();
     window.needupdate = () => update.needupdate();
     window.update = () => update.update();
+    window.download = (filename: string, text: string) => download(filename, text);
 }
